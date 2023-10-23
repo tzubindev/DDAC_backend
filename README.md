@@ -12,3 +12,12 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 5. Hussein Abdullah Mohammed Ba Ragaa
 
 ---
+
+## Introduction
+
+
+---
+
+## Frontend
+
+---
