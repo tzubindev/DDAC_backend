@@ -14,4 +14,4 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 
 ## Frontend
 
-`Wait for ghassan link`
+``https://github.com/GhassanYJR/DDAC_frontend.git``
