@@ -18,8 +18,10 @@ Move the current location to the desired location:
 
 ``` bash
 cd <path to your desired location>
+```
 
 To install the GitHub repo:
 
 ``` bash
 git clone https://github.com/GhassanYJR/DDAC_frontend.git
+```
