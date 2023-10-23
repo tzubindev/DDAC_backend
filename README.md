@@ -9,10 +9,7 @@ This assignment is for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLOUD` in *
 4. Oumadevi Sevanandee
 5. Hussein Abdullah Mohammed Ba Ragaa
 
-## Introduction
-
-
-## Frontend Installation
+## Installation
 
 Move the current location to the desired location:
 
@@ -23,5 +20,13 @@ cd <path to your desired location>
 To install the GitHub repo:
 
 ``` bash
-git clone https://github.com/GhassanYJR/DDAC_frontend.git
+git clone https://github.com/tzubindev/DDAC_backend.git
+```
+
+## Frontend Installation
+
+Frontend GitHub repo link:
+
+``` bash
+https://github.com/GhassanYJR/DDAC_frontend.git
 ```
