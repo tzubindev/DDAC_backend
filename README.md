@@ -12,7 +12,10 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 ## Introduction
 
 
-## Frontend
+## Frontend Installation
+
+``` Git Bash
+cd <path to your desired location>
 
 ``` Git Bash
 git clone https://github.com/GhassanYJR/DDAC_frontend.git
