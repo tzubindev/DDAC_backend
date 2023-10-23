@@ -2,8 +2,6 @@
 
 This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLOUD` in ***Asia Pacific University of Technology and Innovation*** 2023. 
 
----
-
 ## Authors
 1. Wong Tze Byng
 2. Ghassan Y J Rashwan
@@ -11,13 +9,9 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 4. Oumadevi Sevanandee
 5. Hussein Abdullah Mohammed Ba Ragaa
 
----
-
 ## Introduction
 
 
----
-
 ## Frontend
 
----
+`Wait for ghassan link`
