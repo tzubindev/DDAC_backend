@@ -14,4 +14,4 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 
 ## Frontend
 
-``https://github.com/GhassanYJR/DDAC_frontend.git``
+```https://github.com/GhassanYJR/DDAC_frontend.git```
