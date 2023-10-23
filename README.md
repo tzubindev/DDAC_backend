@@ -1,6 +1,6 @@
 # DDAC_backend
 
-This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLOUD` in ***Asia Pacific University of Technology and Innovation*** 2023. 
+This assignment is for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLOUD` in ***Asia Pacific University of Technology and Innovation*** 2023. 
 
 ## Authors
 1. Wong Tze Byng
@@ -14,8 +14,12 @@ This is an assignment work for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLO
 
 ## Frontend Installation
 
-``` Git Bash
+Move the current location to the desired location:
+
+``` bash
 cd <path to your desired location>
 
-``` Git Bash
+To install the GitHub repo:
+
+``` bash
 git clone https://github.com/GhassanYJR/DDAC_frontend.git
