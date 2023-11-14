@@ -1,0 +1,25 @@
+{
+  "name": "ddac_backend",
+  "version": "1.0.0",
+  "description": "This assignment is for `DESIGNING AND DEVELOPING APPLICATIONS ON THE CLOUD` in ***Asia Pacific University of Technology and Innovation*** 2023.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "Sequelize",
+    "mysql",
+    "rest",
+    "api",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}
