@@ -1,8 +1,6 @@
 var mysql = require("mysql")
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-//Load the environment variables from the .env
-dotenv.config({ path: '../.env' }); 
 
 var connection = mysql.createConnection({
     host: process.env.HOST,
