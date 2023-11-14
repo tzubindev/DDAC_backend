@@ -15,11 +15,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 port = process.env.PORT;
 
 app.get("/", function (req, res) {
-    let sql = "SELECT * FROM UserData";
+    let sql = "SELECT * FROM userdata";
     connection.query(sql, function (err, results) {
         if (err) throw err;
         res.send(results);
     });
+    connection.end();
 });
 
 connection.connect(function (err) {
@@ -33,5 +34,3 @@ connection.connect(function (err) {
 app.listen(port, function () {
     console.log("App Listening on port", port);
 });
-
-connection.end();
