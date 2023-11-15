@@ -11,8 +11,16 @@ const signupController = require("./signupController");
 const donationController = require("./donationController");
 const rewardController = require("./rewardController");
 const rewardHistoryController = require("./rewardHistoryController");
+const {
+    AppointmentController,
+    APPOINTMENT_STATUS_SCHEDULED,
+    APPOINTMENT_STATUS_COMPLETED,
+} = require("./appointmentController");
+const FeedbackController = require("./feedbackController");
+const SiteController = require("./siteController");
 
 var corsOptions = { origin: `http://localhost:${process.env.PORT}` };
+var curPath = null;
 
 app.use(cors(corsOptions));
 
@@ -39,8 +47,6 @@ connection.connect(function (err) {
     }
     console.log("Database Connected!");
 });
-
-// ENDPOINTS GHASSAN
 
 // Get donation data for a specific user
 app.get("/donation/:id", async function (req, res) {
@@ -343,8 +349,247 @@ app.post("/signup", async function (req, res) {
     }
 });
 
-// ENDPOINTS BYNG
+// ============================== APPOINTMENT
 
+// Get All Appointments from a specific user
+curPath = "/appointment/all/:id";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new AppointmentController().getAppointmentByUserId(
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+// Get Specific Appointment
+curPath = "/appointment/:aid";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new AppointmentController().getAppointmentById(req.params.aid)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/appointment/:id/add";
+app.post(curPath, async function (req, res) {
+    try {
+        const { timestamp } = req.body;
+        res.json(
+            await new AppointmentController().addAppointment(
+                timestamp,
+                APPOINTMENT_STATUS_SCHEDULED,
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/appointment/:aid/delete";
+app.delete(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new AppointmentController().deleteAppointment(req.params.aid)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/appointment/:aid/update";
+app.put(curPath, async function (req, res) {
+    try {
+        const { timestamp, status } = req.body;
+        const result = await new AppointmentController().updateAppointment(
+            timestamp,
+            status,
+            req.params.aid
+        );
+
+        res.json(result);
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+// ============================== Feedback
+curPath = "/feedback/all/";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(await new FeedbackController().getAllFeedbacks());
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/feedback/all/:id";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new FeedbackController().getFeedbacksByUserId(req.params.id)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/feedback/:token";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new FeedbackController().getFeedbackByToken(req.params.token)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/feedback/:id/add";
+app.post(curPath, async function (req, res) {
+    try {
+        const { content, type, timestamp } = req.body;
+        res.json(
+            await new FeedbackController().addFeedback(
+                content,
+                type,
+                timestamp,
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/feedback/:token/delete";
+app.delete(curPath, async function (req, res) {
+    try {
+        res.json(
+            await new FeedbackController().deleteFeedback(req.params.token)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/feedback/:token/update";
+app.put(curPath, async function (req, res) {
+    try {
+        const { content, type, timestamp } = req.body;
+        const result = await new FeedbackController().updateFeedback(
+            content,
+            type,
+            timestamp,
+            req.params.token
+        );
+
+        res.json(result);
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+// ============================== InformationSite
+curPath = "/site/all/";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(await new SiteController().getAllSites());
+    } catch (error) {
+        console.error("Error in /donation/:id endpoint:", error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/site/:pid";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(await new SiteController().getSiteByPid(req.params.pid));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/site/:id";
+app.get(curPath, async function (req, res) {
+    try {
+        res.json(await new SiteController().getSiteByUserId(req.params.id));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/site/:id/add";
+app.post(curPath, async function (req, res) {
+    try {
+        const { type, title, description, timestamp } = req.body;
+        res.json(
+            await new SiteController().addSite(
+                type,
+                title,
+                description,
+                timestamp,
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/site/:pid/delete";
+app.delete(curPath, async function (req, res) {
+    try {
+        res.json(await new SiteController().deleteSite(req.params.pid));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+curPath = "/site/:pid/update";
+app.put(curPath, async function (req, res) {
+    try {
+        const { type, title, description, timestamp } = req.body;
+        const result = await new FeedbackController().updateFeedback(
+            type,
+            title,
+            description,
+            timestamp,
+            req.params.pid
+        );
+
+        res.json(result);
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+delete curPath;
+
+// ============================== Server Listener
 app.listen(port, function () {
     console.log("App Listening on port", port);
 });
