@@ -60,12 +60,11 @@ class AppointmentController {
         }
     }
 
-    async updateAppointment(aid, timestamp, status) {
+    async updateAppointment(aid, timestamp, status, location) {
         try {
-            const sql =
-                "UPDATE appointment SET timestamp = ?, status = ? WHERE aid = ?";
-            const result = await this.query(sql, [timestamp, status, aid]);
-
+            const sql = "UPDATE appointment SET timestamp = ?, status = ?, location = ? WHERE aid = ?";
+            const result = await this.query(sql, [timestamp, status, location, aid]);
+    
             if (result.affectedRows === 1) {
                 return { message: "Appointment updated successfully" };
             } else {

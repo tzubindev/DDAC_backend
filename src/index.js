@@ -404,11 +404,12 @@ app.delete(curPath, async function (req, res) {
 curPath = "/appointment/:aid/update";
 app.put(curPath, async function (req, res) {
     try {
-        const { timestamp, status } = req.body;
+        const { timestamp, status, location } = req.body;
         const result = await new AppointmentController().updateAppointment(
+            req.params.aid,
             timestamp,
             status,
-            req.params.aid
+            location
         );
 
         res.json(result);
@@ -417,6 +418,7 @@ app.put(curPath, async function (req, res) {
         res.status(500).send(error.message);
     }
 });
+
 
 // ============================== Feedback
 curPath = "/feedback/all/";
