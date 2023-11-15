@@ -3,7 +3,7 @@ const connection = require("./database");
 class SiteController {
     async getAllSites() {
         try {
-            const sql = "SELECT * FROM site";
+            const sql = "SELECT * FROM information_site";
             const sites = await this.query(sql);
             return sites;
         } catch (error) {
@@ -13,7 +13,7 @@ class SiteController {
 
     async getSiteByPid(pid) {
         try {
-            const sql = "SELECT * FROM site WHERE pid = ?";
+            const sql = "SELECT * FROM information_site WHERE pid = ?";
             const site = await this.query(sql, [pid]);
             return site[0];
         } catch (error) {
@@ -23,7 +23,7 @@ class SiteController {
 
     async getSiteByUserId(uid) {
         try {
-            const sql = "SELECT * FROM site WHERE uid = ?";
+            const sql = "SELECT * FROM information_site WHERE uid = ?";
             const site = await this.query(sql, [uid]);
             return site[0];
         } catch (error) {
@@ -53,7 +53,7 @@ class SiteController {
 
     async deleteSite(pid) {
         try {
-            const sql = "DELETE FROM site WHERE pid = ?";
+            const sql = "DELETE FROM information_site WHERE pid = ?";
             const result = await this.query(sql, [pid]);
 
             if (result.affectedRows === 1) {

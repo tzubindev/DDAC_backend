@@ -507,7 +507,7 @@ app.get(curPath, async function (req, res) {
     try {
         res.json(await new SiteController().getAllSites());
     } catch (error) {
-        console.error("Error in /donation/:id endpoint:", error);
+        console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
     }
 });
