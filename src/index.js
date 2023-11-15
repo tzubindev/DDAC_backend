@@ -350,23 +350,16 @@ app.post("/signup", async function (req, res) {
 });
 
 // ============================== APPOINTMENT
-
-// Get All Appointments from a specific user
-curPath = "/appointment/all/:id";
+curPath = "/appointment/all/";
 app.get(curPath, async function (req, res) {
     try {
-        res.json(
-            await new AppointmentController().getAppointmentByUserId(
-                req.params.id
-            )
-        );
+        res.json(await new AppointmentController().getAllAppointments());
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
     }
 });
 
-// Get Specific Appointment
 curPath = "/appointment/:aid";
 app.get(curPath, async function (req, res) {
     try {
