@@ -3,14 +3,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var app = express();
 var connection = require("./database.js");
-require('dotenv').config();
+require("dotenv").config();
 
 // Import Controller
 const signinController = require("./signinController");
 const signupController = require("./signupController");
 const donationController = require("./donationController");
 const rewardController = require("./rewardController");
-const rewardHistoryController = require("./rewardHistoryController")
+const rewardHistoryController = require("./rewardHistoryController");
 
 var corsOptions = { origin: `http://localhost:${process.env.PORT}` };
 
@@ -47,7 +47,9 @@ app.get("/donation/:id", async function (req, res) {
     const userId = req.params.id;
     try {
         const donationControllerInstance = new donationController();
-        const donationData = await donationControllerInstance.getByUserId(userId);
+        const donationData = await donationControllerInstance.getByUserId(
+            userId
+        );
         res.json(donationData);
     } catch (error) {
         console.error("Error in /donation/:id endpoint:", error);
@@ -65,7 +67,12 @@ app.post("/donation/:id/add", async function (req, res) {
         const donationControllerInstance = new donationController();
 
         // Add donation for the specified user
-        const result = await donationControllerInstance.addDonation(userId, type, amount, food_description);
+        const result = await donationControllerInstance.addDonation(
+            userId,
+            type,
+            amount,
+            food_description
+        );
 
         res.json(result);
     } catch (error) {
@@ -83,7 +90,9 @@ app.delete("/donation/:did/delete", async function (req, res) {
         const donationControllerInstance = new donationController();
 
         // Delete donation by its ID
-        const result = await donationControllerInstance.deleteDonation(donationId);
+        const result = await donationControllerInstance.deleteDonation(
+            donationId
+        );
 
         res.json(result);
     } catch (error) {
@@ -102,7 +111,12 @@ app.put("/donation/:did/update", async function (req, res) {
         const donationControllerInstance = new donationController();
 
         // Update donation by its ID
-        const result = await donationControllerInstance.updateDonation(donationId, type, amount, food_description);
+        const result = await donationControllerInstance.updateDonation(
+            donationId,
+            type,
+            amount,
+            food_description
+        );
 
         res.json(result);
     } catch (error) {
@@ -143,7 +157,11 @@ app.post("/rewards/add", async function (req, res) {
 
     try {
         const rewardControllerInstance = new rewardController();
-        const result = await rewardControllerInstance.addReward(item, description, required_points);
+        const result = await rewardControllerInstance.addReward(
+            item,
+            description,
+            required_points
+        );
         res.json(result);
     } catch (error) {
         console.error("Error in /rewards/add endpoint:", error);
@@ -172,7 +190,12 @@ app.put("/rewards/:rid/update", async function (req, res) {
 
     try {
         const rewardControllerInstance = new rewardController();
-        const result = await rewardControllerInstance.updateReward(rewardId, item, description, required_points);
+        const result = await rewardControllerInstance.updateReward(
+            rewardId,
+            item,
+            description,
+            required_points
+        );
         res.json(result);
     } catch (error) {
         console.error("Error in /rewards/:rid/update endpoint:", error);
@@ -184,7 +207,8 @@ app.put("/rewards/:rid/update", async function (req, res) {
 app.get("/reward-history", async function (req, res) {
     try {
         const rewardHistoryController = new RewardHistoryController();
-        const rewardHistoryData = await rewardHistoryController.getAllRewardHistory();
+        const rewardHistoryData =
+            await rewardHistoryController.getAllRewardHistory();
         res.json(rewardHistoryData);
     } catch (error) {
         console.error("Error in /reward-history endpoint:", error);
@@ -195,14 +219,17 @@ app.get("/reward-history", async function (req, res) {
 // Get all reward history entries for a specific user ID
 app.get("/reward-history/user/:uid", async function (req, res) {
     const userId = req.params.uid;
-  
+
     try {
-    const rewardHistoryControllerInstance = new rewardHistoryController();
-    const rewardHistoryData = await rewardHistoryControllerInstance.getRewardHistoryByUserId(userId);
-    res.json(rewardHistoryData);
+        const rewardHistoryControllerInstance = new rewardHistoryController();
+        const rewardHistoryData =
+            await rewardHistoryControllerInstance.getRewardHistoryByUserId(
+                userId
+            );
+        res.json(rewardHistoryData);
     } catch (error) {
-    console.error("Error in /reward-history/user/:uid endpoint:", error);
-    res.status(500).send(error.message);
+        console.error("Error in /reward-history/user/:uid endpoint:", error);
+        res.status(500).send(error.message);
     }
 });
 
@@ -212,7 +239,10 @@ app.get("/reward-history/:rhid", async function (req, res) {
 
     try {
         const rewardHistoryControllerInstance = new rewardHistoryController();
-        const rewardHistoryEntry = await rewardHistoryControllerInstance.getRewardHistoryById(rewardHistoryId);
+        const rewardHistoryEntry =
+            await rewardHistoryControllerInstance.getRewardHistoryById(
+                rewardHistoryId
+            );
         res.json(rewardHistoryEntry);
     } catch (error) {
         console.error("Error in /reward-history/:rhid endpoint:", error);
@@ -226,7 +256,12 @@ app.post("/reward-history/add", async function (req, res) {
 
     try {
         const rewardHistoryControllerInstance = new rewardHistoryController();
-        const result = await rewardHistoryControllerInstance.addRewardHistory(uid, timestamp, rid, status);
+        const result = await rewardHistoryControllerInstance.addRewardHistory(
+            uid,
+            timestamp,
+            rid,
+            status
+        );
         res.json(result);
     } catch (error) {
         console.error("Error in /reward-history/add endpoint:", error);
@@ -240,7 +275,10 @@ app.delete("/reward-history/:rhid/delete", async function (req, res) {
 
     try {
         const rewardHistoryControllerInstance = new rewardHistoryController();
-        const result = await rewardHistoryControllerInstance.deleteRewardHistory(rewardHistoryId);
+        const result =
+            await rewardHistoryControllerInstance.deleteRewardHistory(
+                rewardHistoryId
+            );
         res.json(result);
     } catch (error) {
         console.error("Error in /reward-history/:rhid/delete endpoint:", error);
@@ -255,7 +293,14 @@ app.put("/reward-history/:rhid/update", async function (req, res) {
 
     try {
         const rewardHistoryControllerInstance = new rewardHistoryController();
-        const result = await rewardHistoryControllerInstance.updateRewardHistory(rewardHistoryId, uid, timestamp, rid, status);
+        const result =
+            await rewardHistoryControllerInstance.updateRewardHistory(
+                rewardHistoryId,
+                uid,
+                timestamp,
+                rid,
+                status
+            );
         res.json(result);
     } catch (error) {
         console.error("Error in /reward-history/:rhid/update endpoint:", error);
@@ -263,7 +308,7 @@ app.put("/reward-history/:rhid/update", async function (req, res) {
     }
 });
 
-// sign in 
+// sign in
 app.post("/signin", async function (req, res) {
     const { email, password } = req.body;
 
@@ -275,13 +320,23 @@ app.post("/signin", async function (req, res) {
         res.status(401).send(error.message);
     }
 });
-// sign up 
+
+// sign up
 app.post("/signup", async function (req, res) {
-    const { email, password, phone, ic_ppno, address_id, reward_points } = req.body;
+    const { email, password, phone, ic_ppno, address_id, reward_points } =
+        req.body;
 
     try {
         const signupControllerInstance = new signupController();
-        await signupControllerInstance.signUp(email, password, phone, ic_ppno, address_id, reward_points, res);
+        await signupControllerInstance.signUp(
+            email,
+            password,
+            phone,
+            ic_ppno,
+            address_id,
+            reward_points,
+            res
+        );
     } catch (error) {
         // You can add additional error handling here if needed
         console.error("Error in signup endpoint:", error);
@@ -289,8 +344,6 @@ app.post("/signup", async function (req, res) {
 });
 
 // ENDPOINTS BYNG
-
-
 
 app.listen(port, function () {
     console.log("App Listening on port", port);
