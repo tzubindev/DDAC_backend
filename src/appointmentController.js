@@ -31,11 +31,16 @@ class AppointmentController {
         }
     }
 
-    async addAppointment(timestamp, status, uid) {
+    async addAppointment(timestamp, status, location, uid) {
         try {
             const sql =
-                "INSERT INTO appointment ( timestamp, status, uid) VALUES ( ?, ?, ?)";
-            const result = await this.query(sql, [timestamp, status, uid]);
+                "INSERT INTO appointment ( timestamp, status, location, uid) VALUES ( ?, ?, ?, ?)";
+            const result = await this.query(sql, [
+                timestamp,
+                status,
+                location,
+                uid,
+            ]);
             return {
                 message: "Appointment added successfully",
                 aid: result.insertId,
@@ -62,9 +67,15 @@ class AppointmentController {
 
     async updateAppointment(aid, timestamp, status, location) {
         try {
-            const sql = "UPDATE appointment SET timestamp = ?, status = ?, location = ? WHERE aid = ?";
-            const result = await this.query(sql, [timestamp, status, location, aid]);
-    
+            const sql =
+                "UPDATE appointment SET timestamp = ?, status = ?, location = ? WHERE aid = ?";
+            const result = await this.query(sql, [
+                timestamp,
+                status,
+                location,
+                aid,
+            ]);
+
             if (result.affectedRows === 1) {
                 return { message: "Appointment updated successfully" };
             } else {
