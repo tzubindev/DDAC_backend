@@ -19,9 +19,35 @@ const {
 const FeedbackController = require("./feedbackController");
 const SiteController = require("./siteController");
 
+// Middleware
 var corsOptions = {
     origin: `http://localhost:${process.env.CLIENT_PORT || 5173}`,
 };
+
+const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res
+            .status(401)
+            .json({ error: "Unauthorized: No token provided" });
+    }
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res
+                .status(401)
+                .json({ error: "Unauthorized: Invalid token" });
+        }
+
+        // Attach the decoded payload to the request for later use
+        req.user = decoded;
+
+        // Continue with the request
+        next();
+    });
+};
+
 var curPath = null;
 
 app.use(cors(corsOptions));
@@ -319,7 +345,6 @@ app.put("/reward-history/:rhid/update", async function (req, res) {
 // sign in
 app.post("/signin", async function (req, res) {
     const { email, password } = req.body;
-    console.log(req.body);
 
     try {
         const signinControllerInstance = new signinController();

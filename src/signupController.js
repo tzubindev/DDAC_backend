@@ -22,7 +22,7 @@ class SignupController {
 
                 // Insert the new user into the database
                 const sql =
-                    "INSERT INTO user_data (uid, email, password, phone, ic_ppno, address_id, reward_points) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    "INSERT INTO user_data (uid, email, password, phone, ic_ppno, address_id, reward_points, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 const result = await this.query(sql, [
                     newUid,
                     email,
@@ -31,6 +31,7 @@ class SignupController {
                     ic_ppno,
                     address_id,
                     reward_points,
+                    0,
                 ]);
 
                 // Check if the insertion was successful
