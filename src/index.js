@@ -485,7 +485,7 @@ app.get(curPath, async function (req, res) {
 });
 
 curPath = "/feedback/:uid/add";
-app.post(curPath, async function (req, res) {
+app.post(curPath, verifyToken, async function (req, res) {
     try {
         const { content, type } = req.body;
         res.json(
