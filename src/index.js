@@ -12,6 +12,7 @@ const signupController = require("./signupController");
 const donationController = require("./donationController");
 const rewardController = require("./rewardController");
 const rewardHistoryController = require("./rewardHistoryController");
+const UserController = require("./userController");
 const {
     AppointmentController,
     APPOINTMENT_STATUS_SCHEDULED,
@@ -76,6 +77,20 @@ connection.connect(function (err) {
     }
     console.log("Database Connected!");
 });
+
+// Get Specific User Data
+app.get("/user-data/:id", async function(req, res){
+    const userId = req.params.id;
+    try {
+        const userControllerInstance = new UserController();
+        res.json(
+            await userControllerInstance.getUserDataById(userId)
+        );
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+})
 
 // Get donation data for a specific user
 app.get("/donation/:uid", async function (req, res) {
