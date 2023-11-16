@@ -46,7 +46,10 @@ class FeedbackController {
                 token: result.insertId,
             };
         } catch (error) {
-            throw error;
+            return {
+                message: "Feedback adding failed",
+                error: error.message,
+            };
         }
     }
 
