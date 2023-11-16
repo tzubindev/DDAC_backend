@@ -461,7 +461,7 @@ app.get(curPath, async function (req, res) {
 });
 
 curPath = "/feedback/all/:uid";
-app.get(curPath, async function (req, res) {
+app.get(curPath, verifyToken, async function (req, res) {
     try {
         res.json(
             await new FeedbackController().getFeedbacksByUserId(req.params.uid)
@@ -487,12 +487,12 @@ app.get(curPath, async function (req, res) {
 curPath = "/feedback/:uid/add";
 app.post(curPath, async function (req, res) {
     try {
-        const { content, type, timestamp } = req.body;
+        const { content, type } = req.body;
         res.json(
             await new FeedbackController().addFeedback(
                 content,
                 type,
-                timestamp,
+                new Date().toISOString().slice(0, 19).replace("T", " "),
                 req.params.uid
             )
         );
