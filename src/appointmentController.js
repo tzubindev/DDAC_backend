@@ -31,7 +31,7 @@ class AppointmentController {
         }
     }
 
-    async addAppointment(timestamp, status, location, uid) {
+    async addAppointment(timestamp, location, status, uid) {
         try {
             const sql =
                 "INSERT INTO appointment ( timestamp, status, location, uid) VALUES ( ?, ?, ?, ?)";
@@ -46,7 +46,10 @@ class AppointmentController {
                 aid: result.insertId,
             };
         } catch (error) {
-            throw error;
+            return {
+                message: "Appointment scheduled fail",
+                error: error.message,
+            };
         }
     }
 

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var app = express();
 var connection = require("./database.js");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 // Import Controller
@@ -77,8 +78,8 @@ connection.connect(function (err) {
 });
 
 // Get donation data for a specific user
-app.get("/donation/:id", async function (req, res) {
-    const userId = req.params.id;
+app.get("/donation/:uid", async function (req, res) {
+    const userId = req.params.uid;
     try {
         const donationControllerInstance = new donationController();
         const donationData = await donationControllerInstance.getByUserId(
@@ -86,14 +87,14 @@ app.get("/donation/:id", async function (req, res) {
         );
         res.json(donationData);
     } catch (error) {
-        console.error("Error in /donation/:id endpoint:", error);
+        console.error("Error in /donation/:uid endpoint:", error);
         res.status(500).send(error.message);
     }
 });
 
 // Add donation data for a specific user
-app.post("/donation/:id/add", async function (req, res) {
-    const userId = req.params.id;
+app.post("/donation/:uid/add", verifyToken, async function (req, res) {
+    const userId = req.params.uid;
     const { type, amount, food_description } = req.body;
 
     try {
@@ -110,7 +111,7 @@ app.post("/donation/:id/add", async function (req, res) {
 
         res.json(result);
     } catch (error) {
-        console.error("Error in /donation/:id/add endpoint:", error);
+        console.error("Error in /donation/:uid/add endpoint:", error);
         res.status(500).send(error.message);
     }
 });
@@ -400,15 +401,16 @@ app.get(curPath, async function (req, res) {
     }
 });
 
-curPath = "/appointment/:id/add";
-app.post(curPath, async function (req, res) {
+curPath = "/appointment/:uid/add";
+app.post(curPath, verifyToken, async function (req, res) {
     try {
-        const { timestamp } = req.body;
+        const { timestamp, location } = req.body;
         res.json(
             await new AppointmentController().addAppointment(
                 timestamp,
+                location,
                 APPOINTMENT_STATUS_SCHEDULED,
-                req.params.id
+                req.params.uid
             )
         );
     } catch (error) {
@@ -458,11 +460,11 @@ app.get(curPath, async function (req, res) {
     }
 });
 
-curPath = "/feedback/all/:id";
+curPath = "/feedback/all/:uid";
 app.get(curPath, async function (req, res) {
     try {
         res.json(
-            await new FeedbackController().getFeedbacksByUserId(req.params.id)
+            await new FeedbackController().getFeedbacksByUserId(req.params.uid)
         );
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
@@ -482,7 +484,7 @@ app.get(curPath, async function (req, res) {
     }
 });
 
-curPath = "/feedback/:id/add";
+curPath = "/feedback/:uid/add";
 app.post(curPath, async function (req, res) {
     try {
         const { content, type, timestamp } = req.body;
@@ -491,7 +493,7 @@ app.post(curPath, async function (req, res) {
                 content,
                 type,
                 timestamp,
-                req.params.id
+                req.params.uid
             )
         );
     } catch (error) {
@@ -532,7 +534,7 @@ app.put(curPath, async function (req, res) {
 
 // ============================== InformationSite
 curPath = "/site/all/";
-app.get(curPath, async function (req, res) {
+app.get(curPath, verifyToken, async function (req, res) {
     try {
         res.json(await new SiteController().getAllSites());
     } catch (error) {
@@ -551,17 +553,17 @@ app.get(curPath, async function (req, res) {
     }
 });
 
-curPath = "/site/:id";
+curPath = "/site/:uid";
 app.get(curPath, async function (req, res) {
     try {
-        res.json(await new SiteController().getSiteByUserId(req.params.id));
+        res.json(await new SiteController().getSiteByUserId(req.params.uid));
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
     }
 });
 
-curPath = "/site/:id/add";
+curPath = "/site/:uid/add";
 app.post(curPath, async function (req, res) {
     try {
         const { type, title, description, timestamp } = req.body;
@@ -571,7 +573,7 @@ app.post(curPath, async function (req, res) {
                 title,
                 description,
                 timestamp,
-                req.params.id
+                req.params.uid
             )
         );
     } catch (error) {

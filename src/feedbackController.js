@@ -25,7 +25,7 @@ class FeedbackController {
         try {
             const sql = "SELECT * FROM feedback WHERE uid = ?";
             const feedback = await this.query(sql, [uid]);
-            return feedback[0];
+            return feedback;
         } catch (error) {
             throw error;
         }

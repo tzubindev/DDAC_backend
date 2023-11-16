@@ -6,7 +6,7 @@ class DonationController {
     async getByUserId(userId) {
         try {
             // Query the database to get donation data for the specified user ID
-            const sql = "SELECT * FROM DonationHistory WHERE uid = ?";
+            const sql = "SELECT * FROM donation_history WHERE uid = ?";
             const results = await this.query(sql, [userId]);
             return results;
         } catch (error) {
@@ -19,18 +19,28 @@ class DonationController {
     async addDonation(userId, type, amount, food_description) {
         try {
             // Insert the new donation into the database
-            const sql = "INSERT INTO DonationHistory (type, amount, food_description, uid, timestamp) VALUES (?, ?, ?, ?, NOW())";
-            const result = await this.query(sql, [type, amount, food_description, userId]);
+            const sql =
+                "INSERT INTO donation_history (type, amount, food_description, uid, timestamp) VALUES (?, ?, ?, ?, NOW())";
+            const result = await this.query(sql, [
+                type,
+                amount,
+                food_description,
+                userId,
+                new Date().toISOString().slice(0, 19).replace("T", " "),
+            ]);
 
             // Check if the insertion was successful
             if (result.affectedRows === 1) {
-                return { message: "Donation added successfully" };
+                return {
+                    message: "Donation added successfully",
+                    did: result.insertId,
+                };
             } else {
-                throw new Error("Donation addition failed");
+                return { message: "Donation addition failed" };
             }
         } catch (error) {
             console.error("Error during donation addition:", error);
-            throw new Error("Internal Server Error");
+            return { message: "Internal Server Error" };
         }
     }
 
@@ -38,7 +48,7 @@ class DonationController {
     async deleteDonation(donationId) {
         try {
             // Delete the donation from the database
-            const sql = "DELETE FROM DonationHistory WHERE did = ?";
+            const sql = "DELETE FROM donation_history WHERE did = ?";
             const result = await this.query(sql, [donationId]);
 
             // Check if the deletion was successful
@@ -57,8 +67,14 @@ class DonationController {
     async updateDonation(donationId, type, amount, food_description) {
         try {
             // Update the donation in the database
-            const sql = "UPDATE DonationHistory SET type = ?, amount = ?, food_description = ? WHERE did = ?";
-            const result = await this.query(sql, [type, amount, food_description, donationId]);
+            const sql =
+                "UPDATE donation_history SET type = ?, amount = ?, food_description = ? WHERE did = ?";
+            const result = await this.query(sql, [
+                type,
+                amount,
+                food_description,
+                donationId,
+            ]);
 
             // Check if the update was successful
             if (result.affectedRows === 1) {
