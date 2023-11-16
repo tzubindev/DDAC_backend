@@ -4,9 +4,8 @@ const connection = require("./database");
 
 class SigninController {
     async signIn(email, password) {
-
         // Retrieve user from the database by email
-        let sql = "SELECT * FROM UserData WHERE email = ?";
+        let sql = "SELECT * FROM user_data WHERE email = ?";
         const results = await this.query(sql, [email]);
 
         if (results.length === 0) {
@@ -20,7 +19,11 @@ class SigninController {
 
         if (passwordMatch) {
             // Generate a JWT token
-            const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            const token = jwt.sign(
+                { userId: user.id },
+                process.env.SECRET_KEY,
+                { expiresIn: "1h" }
+            );
             return { token };
         } else {
             console.log("Invalid credentials");

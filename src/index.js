@@ -19,7 +19,9 @@ const {
 const FeedbackController = require("./feedbackController");
 const SiteController = require("./siteController");
 
-var corsOptions = { origin: `http://localhost:${process.env.PORT}` };
+var corsOptions = {
+    origin: `http://localhost:${process.env.CLIENT_PORT || 5173}`,
+};
 var curPath = null;
 
 app.use(cors(corsOptions));
@@ -317,11 +319,12 @@ app.put("/reward-history/:rhid/update", async function (req, res) {
 // sign in
 app.post("/signin", async function (req, res) {
     const { email, password } = req.body;
+    console.log(req.body);
 
     try {
         const signinControllerInstance = new signinController();
         const result = await signinControllerInstance.signIn(email, password);
-        res.json(result); // Fix: use the correct variable 'result'
+        res.json(result);
     } catch (error) {
         res.status(401).send(error.message);
     }
@@ -329,20 +332,20 @@ app.post("/signin", async function (req, res) {
 
 // sign up
 app.post("/signup", async function (req, res) {
-    const { email, password, phone, ic_ppno, address_id, reward_points } =
-        req.body;
+    console.log("Regitration.");
+    const { email, password, phone, ic_ppno, address_id } = req.body;
 
     try {
         const signupControllerInstance = new signupController();
-        await signupControllerInstance.signUp(
+        const result = await signupControllerInstance.signUp(
             email,
             password,
             phone,
             ic_ppno,
             address_id,
-            reward_points,
-            res
+            0
         );
+        res.send(result);
     } catch (error) {
         // You can add additional error handling here if needed
         console.error("Error in signup endpoint:", error);
@@ -418,7 +421,6 @@ app.put(curPath, async function (req, res) {
         res.status(500).send(error.message);
     }
 });
-
 
 // ============================== Feedback
 curPath = "/feedback/all/";
