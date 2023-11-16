@@ -3,7 +3,7 @@ const connection = require("./database");
 class RewardController {
     async getAllRewards() {
         try {
-            const sql = "SELECT * FROM Rewards";
+            const sql = "SELECT * FROM rewards";
             const rewards = await this.query(sql);
             return rewards;
         } catch (error) {
@@ -23,9 +23,17 @@ class RewardController {
 
     async addReward(item, description, required_points) {
         try {
-            const sql = "INSERT INTO Rewards (item, description, required_points) VALUES (?, ?, ?)";
-            const result = await this.query(sql, [item, description, required_points]);
-            return { message: "Reward added successfully", rewardId: result.insertId };
+            const sql =
+                "INSERT INTO Rewards (item, description, required_points) VALUES (?, ?, ?)";
+            const result = await this.query(sql, [
+                item,
+                description,
+                required_points,
+            ]);
+            return {
+                message: "Reward added successfully",
+                rewardId: result.insertId,
+            };
         } catch (error) {
             throw error;
         }
@@ -48,8 +56,14 @@ class RewardController {
 
     async updateReward(rewardId, item, description, required_points) {
         try {
-            const sql = "UPDATE Rewards SET item = ?, description = ?, required_points = ? WHERE rid = ?";
-            const result = await this.query(sql, [item, description, required_points, rewardId]);
+            const sql =
+                "UPDATE Rewards SET item = ?, description = ?, required_points = ? WHERE rid = ?";
+            const result = await this.query(sql, [
+                item,
+                description,
+                required_points,
+                rewardId,
+            ]);
 
             if (result.affectedRows === 1) {
                 return { message: "Reward updated successfully" };

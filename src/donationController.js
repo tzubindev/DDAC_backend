@@ -3,7 +3,7 @@ const connection = require("./database");
 
 class DonationController {
     // Get donation data based on user ID
-    async getByUserId(userId) {
+    async getDonationsByUserId(userId) {
         try {
             // Query the database to get donation data for the specified user ID
             const sql = "SELECT * FROM donation_history WHERE uid = ?";

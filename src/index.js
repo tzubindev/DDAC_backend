@@ -11,7 +11,7 @@ const signinController = require("./signinController");
 const signupController = require("./signupController");
 const donationController = require("./donationController");
 const rewardController = require("./rewardController");
-const rewardHistoryController = require("./rewardHistoryController");
+const RewardHistoryController = require("./rewardHistoryController");
 const UserController = require("./userController");
 const {
     AppointmentController,
@@ -60,8 +60,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 port = process.env.PORT;
 
-console.log(port);
-
 app.get("/", function (req, res) {
     let sql = "SELECT * FROM Address";
     connection.query(sql, function (err, results) {
@@ -79,27 +77,24 @@ connection.connect(function (err) {
 });
 
 // Get Specific User Data
-app.get("/user-data/:id", async function(req, res){
+app.get("/user-data/:id", async function (req, res) {
     const userId = req.params.id;
     try {
         const userControllerInstance = new UserController();
-        res.json(
-            await userControllerInstance.getUserDataById(userId)
-        );
+        res.json(await userControllerInstance.getUserDataById(userId));
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
     }
-})
+});
 
 // Get donation data for a specific user
 app.get("/donation/:uid", async function (req, res) {
     const userId = req.params.uid;
     try {
         const donationControllerInstance = new donationController();
-        const donationData = await donationControllerInstance.getByUserId(
-            userId
-        );
+        const donationData =
+            await donationControllerInstance.getDonationsByUserId(userId);
         res.json(donationData);
     } catch (error) {
         console.error("Error in /donation/:uid endpoint:", error);
@@ -176,10 +171,11 @@ app.put("/donation/:did/update", async function (req, res) {
 });
 
 // Get all rewards
-app.get("/rewards", async function (req, res) {
+app.get("/rewards/all", verifyToken, async function (req, res) {
     try {
         const rewardControllerInstance = new rewardController();
         const allRewards = await rewardControllerInstance.getAllRewards();
+
         res.json(allRewards);
     } catch (error) {
         console.error("Error in /rewards endpoint:", error);
@@ -254,11 +250,12 @@ app.put("/rewards/:rid/update", async function (req, res) {
 });
 
 // Get all reward history entries
-app.get("/reward-history", async function (req, res) {
+app.get("/reward-history/all", verifyToken, async function (req, res) {
     try {
         const rewardHistoryController = new RewardHistoryController();
         const rewardHistoryData =
             await rewardHistoryController.getAllRewardHistory();
+        console.log(rewardHistoryData);
         res.json(rewardHistoryData);
     } catch (error) {
         console.error("Error in /reward-history endpoint:", error);
@@ -373,7 +370,6 @@ app.post("/signin", async function (req, res) {
 
 // sign up
 app.post("/signup", async function (req, res) {
-    console.log("Regitration.");
     const { email, password, phone, ic_ppno, address_id } = req.body;
 
     try {
