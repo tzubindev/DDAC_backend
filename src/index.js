@@ -611,7 +611,7 @@ app.post(curPath, async function (req, res) {
 });
 
 curPath = "/site/:pid/delete";
-app.delete(curPath, async function (req, res) {
+app.delete(curPath, verifyToken, async function (req, res) {
     try {
         res.json(await new SiteController().deleteSite(req.params.pid));
     } catch (error) {
@@ -621,15 +621,15 @@ app.delete(curPath, async function (req, res) {
 });
 
 curPath = "/site/:pid/update";
-app.put(curPath, async function (req, res) {
+app.put(curPath, verifyToken, async function (req, res) {
     try {
-        const { type, title, category, description, timestamp } = req.body;
+        const { type, title, category, description } = req.body;
         const result = await new SiteController().updateSite(
             type,
             title,
             category,
             description,
-            timestamp,
+            new Date().toISOString().slice(0, 19).replace("T", " "),
             req.params.pid
         );
         res.json(result);
