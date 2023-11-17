@@ -88,7 +88,7 @@ app.get("/user-data/:id", verifyToken, async function (req, res) {
     }
 });
 
-app.delet("/user-data/:id/delete", verifyToken, async function (req, res) {
+app.delete("/user-data/:id/delete", verifyToken, async function (req, res) {
     const userId = req.params.id;
     try {
         const userControllerInstance = new UserController();

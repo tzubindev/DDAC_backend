@@ -25,9 +25,18 @@ class UserController {
 
     async deleteUserById(uid) {
         try {
-            const sql = "DELETE FROM user_data WHERE uid = ?;";
-            const sites = await this.query(sql, uid);
-            return sites;
+            const sql = [
+                "DELETE FROM appointment WHERE uid = ?;",
+                "DELETE FROM donation_history WHERE uid = ?;",
+                "DELETE FROM feedback WHERE uid = ?;",
+                "DELETE FROM information_site WHERE uid = ?;",
+                "DELETE FROM reward_history WHERE uid = ?;",
+                "DELETE FROM user_data WHERE uid = ?;",
+            ];
+            for (const s of sql) {
+                await this.query(s, uid);
+            }
+            return { message: "Succesfully Delete User Account." };
         } catch (error) {
             throw error;
         }
