@@ -15,7 +15,7 @@ class RewardHistoryController {
     // Get all reward history entries for a specific user ID
     async getRewardHistoryByUserId(userId) {
         try {
-            const sql = "SELECT * FROM RewardHistory WHERE uid = ?";
+            const sql = "SELECT * FROM reward_history WHERE uid = ?";
             const result = await this.query(sql, [userId]);
             return result;
         } catch (error) {
@@ -26,7 +26,7 @@ class RewardHistoryController {
     // Get reward history entry by rhid
     async getRewardHistoryById(rewardHistoryId) {
         try {
-            const sql = "SELECT * FROM RewardHistory WHERE rhid = ?";
+            const sql = "SELECT * FROM reward_history WHERE rhid = ?";
             const result = await this.query(sql, [rewardHistoryId]);
             return result[0];
         } catch (error) {
@@ -38,7 +38,7 @@ class RewardHistoryController {
     async addRewardHistory(uid, timestamp, rid, status) {
         try {
             const sql =
-                "INSERT INTO RewardHistory (uid, timestamp, rid, status) VALUES (?, ?, ?, ?)";
+                "INSERT INTO reward_history (uid, timestamp, rid, status) VALUES (?, ?, ?, ?)";
             const result = await this.query(sql, [uid, timestamp, rid, status]);
             return "Reward history entry added successfully";
         } catch (error) {
@@ -49,29 +49,23 @@ class RewardHistoryController {
     // Delete a reward history entry by rhid
     async deleteRewardHistory(rewardHistoryId) {
         try {
-            const sql = "DELETE FROM RewardHistory WHERE rhid = ?";
+            const sql = "DELETE FROM reward_history WHERE rhid = ?";
             await this.query(sql, [rewardHistoryId]);
-            return "Reward history entry deleted successfully";
+            return { message: "Reward history entry deleted successfully" };
         } catch (error) {
             throw new Error("Error deleting reward history entry");
         }
     }
 
     // Update a reward history entry by rhid
-    async updateRewardHistory(rewardHistoryId, uid, timestamp, rid, status) {
+    async updateRewardHistory(rewardHistoryId, timestamp, status) {
         try {
             const sql =
-                "UPDATE RewardHistory SET uid = ?, timestamp = ?, rid = ?, status = ? WHERE rhid = ?";
-            await this.query(sql, [
-                uid,
-                timestamp,
-                rid,
-                status,
-                rewardHistoryId,
-            ]);
-            return "Reward history entry updated successfully";
+                "UPDATE reward_history SET timestamp = ?, status = ? WHERE rhid = ?";
+            await this.query(sql, [timestamp, status, rewardHistoryId]);
+            return { message: "Reward history entry updated successfully" };
         } catch (error) {
-            throw new Error("Error updating reward history entry");
+            throw new Error("Error updating reward history entry" + error);
         }
     }
 

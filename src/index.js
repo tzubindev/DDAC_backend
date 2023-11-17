@@ -262,10 +262,9 @@ app.put("/rewards/:rid/update", async function (req, res) {
 // Get all reward history entries
 app.get("/reward-history/all", verifyToken, async function (req, res) {
     try {
-        const rewardHistoryController = new RewardHistoryController();
+        const rewardHistoryControllerInstance = new RewardHistoryController();
         const rewardHistoryData =
-            await rewardHistoryController.getAllRewardHistory();
-        console.log(rewardHistoryData);
+            await rewardHistoryControllerInstance.getAllRewardHistory();
         res.json(rewardHistoryData);
     } catch (error) {
         console.error("Error in /reward-history endpoint:", error);
@@ -278,7 +277,7 @@ app.get("/reward-history/user/:uid", async function (req, res) {
     const userId = req.params.uid;
 
     try {
-        const rewardHistoryControllerInstance = new rewardHistoryController();
+        const rewardHistoryControllerInstance = new RewardHistoryController();
         const rewardHistoryData =
             await rewardHistoryControllerInstance.getRewardHistoryByUserId(
                 userId
@@ -295,7 +294,7 @@ app.get("/reward-history/:rhid", async function (req, res) {
     const rewardHistoryId = req.params.rhid;
 
     try {
-        const rewardHistoryControllerInstance = new rewardHistoryController();
+        const rewardHistoryControllerInstance = new RewardHistoryController();
         const rewardHistoryEntry =
             await rewardHistoryControllerInstance.getRewardHistoryById(
                 rewardHistoryId
@@ -312,7 +311,7 @@ app.post("/reward-history/add", async function (req, res) {
     const { uid, timestamp, rid, status } = req.body;
 
     try {
-        const rewardHistoryControllerInstance = new rewardHistoryController();
+        const rewardHistoryControllerInstance = new RewardHistoryController();
         const result = await rewardHistoryControllerInstance.addRewardHistory(
             uid,
             timestamp,
@@ -327,36 +326,41 @@ app.post("/reward-history/add", async function (req, res) {
 });
 
 // Delete a reward history entry by rhid
-app.delete("/reward-history/:rhid/delete", async function (req, res) {
-    const rewardHistoryId = req.params.rhid;
+app.delete(
+    "/reward-history/:rhid/delete",
+    verifyToken,
+    async function (req, res) {
+        const rewardHistoryId = req.params.rhid;
 
-    try {
-        const rewardHistoryControllerInstance = new rewardHistoryController();
-        const result =
-            await rewardHistoryControllerInstance.deleteRewardHistory(
-                rewardHistoryId
+        try {
+            const rewardHistoryControllerInstance =
+                new RewardHistoryController();
+            const result =
+                await rewardHistoryControllerInstance.deleteRewardHistory(
+                    rewardHistoryId
+                );
+            res.json(result);
+        } catch (error) {
+            console.error(
+                "Error in /reward-history/:rhid/delete endpoint:",
+                error
             );
-        res.json(result);
-    } catch (error) {
-        console.error("Error in /reward-history/:rhid/delete endpoint:", error);
-        res.status(500).send(error.message);
+            res.status(500).send(error.message);
+        }
     }
-});
+);
 
 // Update a reward history entry by rhid
-app.put("/reward-history/:rhid/update", async function (req, res) {
+app.put("/reward-history/:rhid/update", verifyToken, async function (req, res) {
     const rewardHistoryId = req.params.rhid;
-    const { uid, timestamp, rid, status } = req.body;
 
     try {
-        const rewardHistoryControllerInstance = new rewardHistoryController();
+        const rewardHistoryControllerInstance = new RewardHistoryController();
         const result =
             await rewardHistoryControllerInstance.updateRewardHistory(
                 rewardHistoryId,
-                uid,
-                timestamp,
-                rid,
-                status
+                new Date().toISOString().slice(0, 19).replace("T", " "),
+                1
             );
         res.json(result);
     } catch (error) {
