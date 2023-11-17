@@ -183,9 +183,7 @@ app.post("/donation/:did/update", async function (req, res) {
 // Get all rewards
 app.get("/rewards/all", verifyToken, async function (req, res) {
     try {
-        const rewardControllerInstance = new rewardController();
-        const allRewards = await rewardControllerInstance.getAllRewards();
-
+        const allRewards = await new rewardController().getAllRewards();
         res.json(allRewards);
     } catch (error) {
         console.error("Error in /rewards endpoint:", error);

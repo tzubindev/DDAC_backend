@@ -1,6 +1,7 @@
 const connection = require("./database");
 
 class RewardController {
+   
     async getAllRewards() {
         try {
             const sql = "SELECT * FROM rewards";
@@ -10,10 +11,10 @@ class RewardController {
             throw error;
         }
     }
-
+    
     async getRewardById(rewardId) {
         try {
-            const sql = "SELECT * FROM Rewards WHERE rid = ?";
+            const sql = "SELECT * FROM rewards WHERE rid = ?";
             const reward = await this.query(sql, [rewardId]);
             return reward[0];
         } catch (error) {
@@ -24,7 +25,7 @@ class RewardController {
     async addReward(item, description, required_points) {
         try {
             const sql =
-                "INSERT INTO Rewards (item, description, required_points) VALUES (?, ?, ?)";
+                "INSERT INTO rewards (item, description, required_points) VALUES (?, ?, ?)";
             const result = await this.query(sql, [
                 item,
                 description,
@@ -41,7 +42,7 @@ class RewardController {
 
     async deleteReward(rewardId) {
         try {
-            const sql = "DELETE FROM Rewards WHERE rid = ?";
+            const sql = "DELETE FROM rewards WHERE rid = ?";
             const result = await this.query(sql, [rewardId]);
 
             if (result.affectedRows === 1) {
@@ -57,7 +58,7 @@ class RewardController {
     async updateReward(rewardId, item, description, required_points) {
         try {
             const sql =
-                "UPDATE Rewards SET item = ?, description = ?, required_points = ? WHERE rid = ?";
+                "UPDATE rewards SET item = ?, description = ?, required_points = ? WHERE rid = ?";
             const result = await this.query(sql, [
                 item,
                 description,
