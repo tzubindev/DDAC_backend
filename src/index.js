@@ -88,6 +88,17 @@ app.get("/user-data/:id", verifyToken, async function (req, res) {
     }
 });
 
+app.delet("/user-data/:id/delete", verifyToken, async function (req, res) {
+    const userId = req.params.id;
+    try {
+        const userControllerInstance = new UserController();
+        res.json(await userControllerInstance.deleteUserById(userId));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
 // Get Specific User Data Profile
 app.get("/user-data/:id/profile", verifyToken, async function (req, res) {
     const userId = req.params.id;
@@ -101,19 +112,32 @@ app.get("/user-data/:id/profile", verifyToken, async function (req, res) {
 });
 
 // Update Specific User Data Profile
-app.put("/user-data/:id/profile/update", verifyToken, async function (req, res) {
-    const uid = req.params.id;
-    console.log(req.params.id)
-    const { email, password, phone, ic_ppno, address_id } = req.body;
+app.put(
+    "/user-data/:id/profile/update",
+    verifyToken,
+    async function (req, res) {
+        const uid = req.params.id;
+        console.log(req.params.id);
+        const { email, password, phone, ic_ppno, address_id } = req.body;
 
-    try {
-        const userControllerInstance = new UserController();
-        res.json(await userControllerInstance.updateUserProfileData(uid, email, password, phone, ic_ppno, address_id));
-    } catch (error) {
-        console.error(`Error in ${curPath} endpoint:`, error);
-        res.status(500).send(error.message);
+        try {
+            const userControllerInstance = new UserController();
+            res.json(
+                await userControllerInstance.updateUserProfileData(
+                    uid,
+                    email,
+                    password,
+                    phone,
+                    ic_ppno,
+                    address_id
+                )
+            );
+        } catch (error) {
+            console.error(`Error in ${curPath} endpoint:`, error);
+            res.status(500).send(error.message);
+        }
     }
-});
+);
 
 app.get("/donation/all", verifyToken, async function (req, res) {
     try {
