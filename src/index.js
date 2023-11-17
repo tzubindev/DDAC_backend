@@ -73,7 +73,7 @@ connection.connect(function (err) {
         console.error("Error connecting to database:", err);
         return;
     }
-    console.log("Database Connected!");
+    console.log("Database Connected: " + process.env.HOST);
 });
 
 // Get Specific User Data
@@ -82,6 +82,33 @@ app.get("/user-data/:id", verifyToken, async function (req, res) {
     try {
         const userControllerInstance = new UserController();
         res.json(await userControllerInstance.getUserDataById(userId));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+// Get Specific User Data Profile
+app.get("/user-data/:id/profile", verifyToken, async function (req, res) {
+    const userId = req.params.id;
+    try {
+        const userControllerInstance = new UserController();
+        res.json(await userControllerInstance.getUserDataByIdProfile(userId));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
+// Update Specific User Data Profile
+app.put("/user-data/:id/profile/update", verifyToken, async function (req, res) {
+    const uid = req.params.id;
+    console.log(req.params.id)
+    const { email, password, phone, ic_ppno, address_id } = req.body;
+
+    try {
+        const userControllerInstance = new UserController();
+        res.json(await userControllerInstance.updateUserProfileData(uid, email, password, phone, ic_ppno, address_id));
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
