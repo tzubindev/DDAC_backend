@@ -98,6 +98,18 @@ app.get("/donation/all", verifyToken, async function (req, res) {
     }
 });
 
+app.post("/user-data/:id/addpoint", verifyToken, async function (req, res) {
+    const userId = req.params.id;
+    try {
+        const { point } = req.body;
+        const userControllerInstance = new UserController();
+        res.json(await userControllerInstance.addUserPointByID(userId, point));
+    } catch (error) {
+        console.error(`Error in ${curPath} endpoint:`, error);
+        res.status(500).send(error.message);
+    }
+});
+
 // Get donation data for a specific user
 app.get("/donation/:uid", async function (req, res) {
     const userId = req.params.uid;
