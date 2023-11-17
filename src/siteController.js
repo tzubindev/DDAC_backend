@@ -31,13 +31,14 @@ class SiteController {
         }
     }
 
-    async addSite(type, title, description, timestamp, uid) {
+    async addSite(type, title, category, description, timestamp, uid) {
         try {
             const sql =
-                "INSERT INTO site ( type, title, description, timestamp, uid) VALUES ( ?, ?, ?, ?, ? )";
+                "INSERT INTO information_site ( type, title, category, description, timestamp, uid) VALUES ( ?, ?, ?, ?, ?, ? )";
             const result = await this.query(sql, [
                 type,
                 title,
+                category,
                 description,
                 timestamp,
                 uid,
@@ -66,13 +67,14 @@ class SiteController {
         }
     }
 
-    async updateSite(type, title, description, timestamp, pid) {
+    async updateSite(type, title, category, description, timestamp, pid) {
         try {
             const sql =
-                "UPDATE site SET type = ?, title = ?, description = ?, timestamp = ? WHERE pid = ?";
+                "UPDATE information_site SET type = ?, title = ?, category = ?, description = ?, timestamp = ? WHERE pid = ?";
             const result = await this.query(sql, [
                 type,
                 title,
+                category,
                 description,
                 timestamp,
                 pid,

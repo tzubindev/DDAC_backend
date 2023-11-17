@@ -577,11 +577,12 @@ app.get(curPath, async function (req, res) {
 curPath = "/site/:uid/add";
 app.post(curPath, async function (req, res) {
     try {
-        const { type, title, description, timestamp } = req.body;
+        const { type, title, category, description, timestamp } = req.body;
         res.json(
             await new SiteController().addSite(
                 type,
                 title,
+                category,
                 description,
                 timestamp,
                 req.params.uid
@@ -606,15 +607,15 @@ app.delete(curPath, async function (req, res) {
 curPath = "/site/:pid/update";
 app.put(curPath, async function (req, res) {
     try {
-        const { type, title, description, timestamp } = req.body;
-        const result = await new FeedbackController().updateFeedback(
+        const { type, title, category, description, timestamp } = req.body;
+        const result = await new SiteController().updateSite(
             type,
             title,
+            category,
             description,
             timestamp,
             req.params.pid
         );
-
         res.json(result);
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
