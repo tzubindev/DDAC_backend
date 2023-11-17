@@ -68,16 +68,10 @@ class AppointmentController {
         }
     }
 
-    async updateAppointment(aid, timestamp, status, location) {
+    async updateAppointment(aid, status) {
         try {
-            const sql =
-                "UPDATE appointment SET timestamp = ?, status = ?, location = ? WHERE aid = ?";
-            const result = await this.query(sql, [
-                timestamp,
-                status,
-                location,
-                aid,
-            ]);
+            const sql = "UPDATE appointment SET status = ? WHERE aid = ?";
+            const result = await this.query(sql, [status, aid]);
 
             if (result.affectedRows === 1) {
                 return { message: "Appointment updated successfully" };
@@ -85,6 +79,7 @@ class AppointmentController {
                 throw new Error("Appointment update failed");
             }
         } catch (error) {
+            console.error("Error updating appointment:", error);
             throw error;
         }
     }

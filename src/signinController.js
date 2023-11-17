@@ -22,7 +22,7 @@ class SigninController {
             const token = jwt.sign(
                 { userId: user.uid },
                 process.env.SECRET_KEY,
-                { expiresIn: "1h" }
+                { expiresIn: "4h" }
             );
 
             return { uid: user.uid, token: token, is_admin: user.is_admin };

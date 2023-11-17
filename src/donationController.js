@@ -2,6 +2,18 @@
 const connection = require("./database");
 
 class DonationController {
+    async getAllDonations() {
+        try {
+            // Query the database to get donation data for the specified user ID
+            const sql = "SELECT * FROM donation_history;";
+            const results = await this.query(sql);
+            return results;
+        } catch (error) {
+            console.error("Error fetching donation data:", error);
+            throw new Error("Internal Server Error");
+        }
+    }
+
     // Get donation data based on user ID
     async getDonationsByUserId(userId) {
         try {

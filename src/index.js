@@ -9,7 +9,6 @@ require("dotenv").config();
 // Import Controller
 const signinController = require("./signinController");
 const signupController = require("./signupController");
-const donationController = require("./donationController");
 const rewardController = require("./rewardController");
 const RewardHistoryController = require("./rewardHistoryController");
 const UserController = require("./userController");
@@ -20,6 +19,7 @@ const {
 } = require("./appointmentController");
 const FeedbackController = require("./feedbackController");
 const SiteController = require("./siteController");
+const DonationController = require("./DonationController");
 
 // Middleware
 var corsOptions = {
@@ -77,7 +77,7 @@ connection.connect(function (err) {
 });
 
 // Get Specific User Data
-app.get("/user-data/:id", async function (req, res) {
+app.get("/user-data/:id", verifyToken, async function (req, res) {
     const userId = req.params.id;
     try {
         const userControllerInstance = new UserController();
@@ -88,11 +88,21 @@ app.get("/user-data/:id", async function (req, res) {
     }
 });
 
+app.get("/donation/all", verifyToken, async function (req, res) {
+    try {
+        const donationData = await new DonationController().getAllDonations();
+        res.json(donationData);
+    } catch (error) {
+        console.error("Error in /donation/:uid endpoint:", error);
+        res.status(500).send(error.message);
+    }
+});
+
 // Get donation data for a specific user
 app.get("/donation/:uid", async function (req, res) {
     const userId = req.params.uid;
     try {
-        const donationControllerInstance = new donationController();
+        const donationControllerInstance = new DonationController();
         const donationData =
             await donationControllerInstance.getDonationsByUserId(userId);
         res.json(donationData);
@@ -109,7 +119,7 @@ app.post("/donation/:uid/add", verifyToken, async function (req, res) {
 
     try {
         // Create an instance of the donation controller
-        const donationControllerInstance = new donationController();
+        const donationControllerInstance = new DonationController();
 
         // Add donation for the specified user
         const result = await donationControllerInstance.addDonation(
@@ -127,12 +137,12 @@ app.post("/donation/:uid/add", verifyToken, async function (req, res) {
 });
 
 // Delete donation by did
-app.delete("/donation/:did/delete", async function (req, res) {
+app.delete("/donation/:did/delete", verifyToken, async function (req, res) {
     const donationId = req.params.did;
 
     try {
         // Create an instance of the donation controller
-        const donationControllerInstance = new donationController();
+        const donationControllerInstance = new DonationController();
 
         // Delete donation by its ID
         const result = await donationControllerInstance.deleteDonation(
@@ -147,13 +157,13 @@ app.delete("/donation/:did/delete", async function (req, res) {
 });
 
 // Update donation by did
-app.put("/donation/:did/update", async function (req, res) {
+app.post("/donation/:did/update", async function (req, res) {
     const donationId = req.params.did;
     const { type, amount, food_description } = req.body;
 
     try {
         // Create an instance of the donation controller
-        const donationControllerInstance = new donationController();
+        const donationControllerInstance = new DonationController();
 
         // Update donation by its ID
         const result = await donationControllerInstance.updateDonation(
@@ -431,7 +441,7 @@ app.post(curPath, verifyToken, async function (req, res) {
 });
 
 curPath = "/appointment/:aid/delete";
-app.delete(curPath, async function (req, res) {
+app.delete(curPath, verifyToken, async function (req, res) {
     try {
         res.json(
             await new AppointmentController().deleteAppointment(req.params.aid)
@@ -443,17 +453,23 @@ app.delete(curPath, async function (req, res) {
 });
 
 curPath = "/appointment/:aid/update";
-app.put(curPath, async function (req, res) {
+app.post(curPath, verifyToken, async function (req, res) {
     try {
-        const { timestamp, status, location } = req.body;
-        const result = await new AppointmentController().updateAppointment(
-            req.params.aid,
-            timestamp,
-            status,
-            location
-        );
+        const { food_description, status, uid } = req.body;
+        const result_update =
+            await new AppointmentController().updateAppointment(
+                req.params.aid,
+                status
+            );
+        const result_donationHistory =
+            await new DonationController().addDonation(
+                uid,
+                "Food",
+                null,
+                food_description
+            );
 
-        res.json(result);
+        res.json({ result_update, result_donationHistory });
     } catch (error) {
         console.error(`Error in ${curPath} endpoint:`, error);
         res.status(500).send(error.message);
